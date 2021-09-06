@@ -1,0 +1,614 @@
+
+test_DIO.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000002de  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .comment      00000030  00000000  00000000  00000332  2**0
+                  CONTENTS, READONLY
+  2 .debug_aranges 00000050  00000000  00000000  00000362  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   00000309  00000000  00000000  000003b2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 00000139  00000000  00000000  000006bb  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   0000013e  00000000  00000000  000007f4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000068  00000000  00000000  00000934  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    000001b4  00000000  00000000  0000099c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    00000535  00000000  00000000  00000b50  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_ranges 00000030  00000000  00000000  00001085  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 40 01 	call	0x280	; 0x280 <main>
+  64:	0c 94 6d 01 	jmp	0x2da	; 0x2da <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <DIO_setPinDirection>:
+#include "DIO_private.h"
+#include "DIO_config.h"
+
+sint8_t DIO_setPinDirection(uint8_t GPIO, uint8_t pin_number, uint8_t direction)
+{
+	switch (GPIO)
+  6c:	81 30       	cpi	r24, 0x01	; 1
+  6e:	c9 f0       	breq	.+50     	; 0xa2 <DIO_setPinDirection+0x36>
+  70:	28 f0       	brcs	.+10     	; 0x7c <DIO_setPinDirection+0x10>
+  72:	82 30       	cpi	r24, 0x02	; 2
+  74:	39 f1       	breq	.+78     	; 0xc4 <DIO_setPinDirection+0x58>
+  76:	83 30       	cpi	r24, 0x03	; 3
+  78:	b1 f1       	breq	.+108    	; 0xe6 <DIO_setPinDirection+0x7a>
+  7a:	46 c0       	rjmp	.+140    	; 0x108 <DIO_setPinDirection+0x9c>
+	{
+		case GPIOA:
+			if (pin_number < 7 && direction <= 1) 
+  7c:	67 30       	cpi	r22, 0x07	; 7
+  7e:	08 f0       	brcs	.+2      	; 0x82 <DIO_setPinDirection+0x16>
+  80:	45 c0       	rjmp	.+138    	; 0x10c <DIO_setPinDirection+0xa0>
+  82:	42 30       	cpi	r20, 0x02	; 2
+  84:	08 f0       	brcs	.+2      	; 0x88 <DIO_setPinDirection+0x1c>
+  86:	44 c0       	rjmp	.+136    	; 0x110 <DIO_setPinDirection+0xa4>
+			{
+				PORTA_DDR |= (direction<< pin_number);
+  88:	8a b3       	in	r24, 0x1a	; 26
+  8a:	50 e0       	ldi	r21, 0x00	; 0
+  8c:	9a 01       	movw	r18, r20
+  8e:	02 c0       	rjmp	.+4      	; 0x94 <DIO_setPinDirection+0x28>
+  90:	22 0f       	add	r18, r18
+  92:	33 1f       	adc	r19, r19
+  94:	6a 95       	dec	r22
+  96:	e2 f7       	brpl	.-8      	; 0x90 <DIO_setPinDirection+0x24>
+  98:	b9 01       	movw	r22, r18
+  9a:	68 2b       	or	r22, r24
+  9c:	6a bb       	out	0x1a, r22	; 26
+				return 1; // no errors
+  9e:	81 e0       	ldi	r24, 0x01	; 1
+  a0:	08 95       	ret
+			}
+		return -2; // pin_number or direction are out of range
+
+		case GPIOB:
+			if (pin_number < 7 && direction <= 1) 
+  a2:	67 30       	cpi	r22, 0x07	; 7
+  a4:	b8 f5       	brcc	.+110    	; 0x114 <DIO_setPinDirection+0xa8>
+  a6:	42 30       	cpi	r20, 0x02	; 2
+  a8:	b8 f5       	brcc	.+110    	; 0x118 <DIO_setPinDirection+0xac>
+			{
+				PORTB_DDR |= (direction<< pin_number);
+  aa:	87 b3       	in	r24, 0x17	; 23
+  ac:	50 e0       	ldi	r21, 0x00	; 0
+  ae:	9a 01       	movw	r18, r20
+  b0:	02 c0       	rjmp	.+4      	; 0xb6 <DIO_setPinDirection+0x4a>
+  b2:	22 0f       	add	r18, r18
+  b4:	33 1f       	adc	r19, r19
+  b6:	6a 95       	dec	r22
+  b8:	e2 f7       	brpl	.-8      	; 0xb2 <DIO_setPinDirection+0x46>
+  ba:	b9 01       	movw	r22, r18
+  bc:	68 2b       	or	r22, r24
+  be:	67 bb       	out	0x17, r22	; 23
+				return 1; // no errors
+  c0:	81 e0       	ldi	r24, 0x01	; 1
+  c2:	08 95       	ret
+			}
+		return -2; // pin_number or direction are out of range
+		
+		case GPIOC:
+			if (pin_number < 7 && direction <= 1) 
+  c4:	67 30       	cpi	r22, 0x07	; 7
+  c6:	50 f5       	brcc	.+84     	; 0x11c <DIO_setPinDirection+0xb0>
+  c8:	42 30       	cpi	r20, 0x02	; 2
+  ca:	50 f5       	brcc	.+84     	; 0x120 <DIO_setPinDirection+0xb4>
+				{
+					PORTA_DDR |= (direction<< pin_number);
+  cc:	8a b3       	in	r24, 0x1a	; 26
+  ce:	50 e0       	ldi	r21, 0x00	; 0
+  d0:	9a 01       	movw	r18, r20
+  d2:	02 c0       	rjmp	.+4      	; 0xd8 <DIO_setPinDirection+0x6c>
+  d4:	22 0f       	add	r18, r18
+  d6:	33 1f       	adc	r19, r19
+  d8:	6a 95       	dec	r22
+  da:	e2 f7       	brpl	.-8      	; 0xd4 <DIO_setPinDirection+0x68>
+  dc:	b9 01       	movw	r22, r18
+  de:	68 2b       	or	r22, r24
+  e0:	6a bb       	out	0x1a, r22	; 26
+					return 1; // no errors
+  e2:	81 e0       	ldi	r24, 0x01	; 1
+  e4:	08 95       	ret
+				}
+		return -2; // pin_number or direction are out of range
+		
+		case GPIOD:
+		if (pin_number < 7 && direction <= 1) 
+  e6:	67 30       	cpi	r22, 0x07	; 7
+  e8:	e8 f4       	brcc	.+58     	; 0x124 <DIO_setPinDirection+0xb8>
+  ea:	42 30       	cpi	r20, 0x02	; 2
+  ec:	e8 f4       	brcc	.+58     	; 0x128 <DIO_setPinDirection+0xbc>
+				{
+					PORTA_DDR |= (direction<< pin_number);
+  ee:	8a b3       	in	r24, 0x1a	; 26
+  f0:	50 e0       	ldi	r21, 0x00	; 0
+  f2:	9a 01       	movw	r18, r20
+  f4:	02 c0       	rjmp	.+4      	; 0xfa <DIO_setPinDirection+0x8e>
+  f6:	22 0f       	add	r18, r18
+  f8:	33 1f       	adc	r19, r19
+  fa:	6a 95       	dec	r22
+  fc:	e2 f7       	brpl	.-8      	; 0xf6 <DIO_setPinDirection+0x8a>
+  fe:	b9 01       	movw	r22, r18
+ 100:	68 2b       	or	r22, r24
+ 102:	6a bb       	out	0x1a, r22	; 26
+					return 1; // no errors
+ 104:	81 e0       	ldi	r24, 0x01	; 1
+ 106:	08 95       	ret
+				}
+			
+		return -2; // pin_number or direction are out of range
+
+	default: return -1; // GPIO Id isn't defined
+ 108:	8f ef       	ldi	r24, 0xFF	; 255
+ 10a:	08 95       	ret
+			if (pin_number < 7 && direction <= 1) 
+			{
+				PORTA_DDR |= (direction<< pin_number);
+				return 1; // no errors
+			}
+		return -2; // pin_number or direction are out of range
+ 10c:	8e ef       	ldi	r24, 0xFE	; 254
+ 10e:	08 95       	ret
+ 110:	8e ef       	ldi	r24, 0xFE	; 254
+ 112:	08 95       	ret
+			if (pin_number < 7 && direction <= 1) 
+			{
+				PORTB_DDR |= (direction<< pin_number);
+				return 1; // no errors
+			}
+		return -2; // pin_number or direction are out of range
+ 114:	8e ef       	ldi	r24, 0xFE	; 254
+ 116:	08 95       	ret
+ 118:	8e ef       	ldi	r24, 0xFE	; 254
+ 11a:	08 95       	ret
+			if (pin_number < 7 && direction <= 1) 
+				{
+					PORTA_DDR |= (direction<< pin_number);
+					return 1; // no errors
+				}
+		return -2; // pin_number or direction are out of range
+ 11c:	8e ef       	ldi	r24, 0xFE	; 254
+ 11e:	08 95       	ret
+ 120:	8e ef       	ldi	r24, 0xFE	; 254
+ 122:	08 95       	ret
+				{
+					PORTA_DDR |= (direction<< pin_number);
+					return 1; // no errors
+				}
+			
+		return -2; // pin_number or direction are out of range
+ 124:	8e ef       	ldi	r24, 0xFE	; 254
+ 126:	08 95       	ret
+ 128:	8e ef       	ldi	r24, 0xFE	; 254
+
+	default: return -1; // GPIO Id isn't defined
+	}
+}
+ 12a:	08 95       	ret
+
+0000012c <DIO_setPinValue>:
+
+
+
+sint8_t DIO_setPinValue(uint8_t GPIO, uint8_t pin_number, uint8_t value)
+{
+	switch (GPIO)
+ 12c:	81 30       	cpi	r24, 0x01	; 1
+ 12e:	39 f1       	breq	.+78     	; 0x17e <DIO_setPinValue+0x52>
+ 130:	30 f0       	brcs	.+12     	; 0x13e <DIO_setPinValue+0x12>
+ 132:	82 30       	cpi	r24, 0x02	; 2
+ 134:	99 f1       	breq	.+102    	; 0x19c <DIO_setPinValue+0x70>
+ 136:	83 30       	cpi	r24, 0x03	; 3
+ 138:	09 f4       	brne	.+2      	; 0x13c <DIO_setPinValue+0x10>
+ 13a:	41 c0       	rjmp	.+130    	; 0x1be <DIO_setPinValue+0x92>
+ 13c:	51 c0       	rjmp	.+162    	; 0x1e0 <DIO_setPinValue+0xb4>
+	{
+		case GPIOA:
+			if (pin_number < 7) 
+ 13e:	67 30       	cpi	r22, 0x07	; 7
+ 140:	08 f0       	brcs	.+2      	; 0x144 <DIO_setPinValue+0x18>
+ 142:	50 c0       	rjmp	.+160    	; 0x1e4 <DIO_setPinValue+0xb8>
+			{
+				if (GET_BIT(value, 0) == LOW)
+ 144:	40 fd       	sbrc	r20, 0
+ 146:	0e c0       	rjmp	.+28     	; 0x164 <DIO_setPinValue+0x38>
+				{
+					CLR_BIT(PORTA_DATA, pin_number);
+ 148:	2b b3       	in	r18, 0x1b	; 27
+ 14a:	81 e0       	ldi	r24, 0x01	; 1
+ 14c:	90 e0       	ldi	r25, 0x00	; 0
+ 14e:	ac 01       	movw	r20, r24
+ 150:	02 c0       	rjmp	.+4      	; 0x156 <DIO_setPinValue+0x2a>
+ 152:	44 0f       	add	r20, r20
+ 154:	55 1f       	adc	r21, r21
+ 156:	6a 95       	dec	r22
+ 158:	e2 f7       	brpl	.-8      	; 0x152 <DIO_setPinValue+0x26>
+ 15a:	ba 01       	movw	r22, r20
+ 15c:	60 95       	com	r22
+ 15e:	62 23       	and	r22, r18
+ 160:	6b bb       	out	0x1b, r22	; 27
+ 162:	08 95       	ret
+				}
+				else
+				{
+					SET_BIT(PORTA_DATA, pin_number);
+ 164:	2b b3       	in	r18, 0x1b	; 27
+ 166:	81 e0       	ldi	r24, 0x01	; 1
+ 168:	90 e0       	ldi	r25, 0x00	; 0
+ 16a:	ac 01       	movw	r20, r24
+ 16c:	02 c0       	rjmp	.+4      	; 0x172 <DIO_setPinValue+0x46>
+ 16e:	44 0f       	add	r20, r20
+ 170:	55 1f       	adc	r21, r21
+ 172:	6a 95       	dec	r22
+ 174:	e2 f7       	brpl	.-8      	; 0x16e <DIO_setPinValue+0x42>
+ 176:	ba 01       	movw	r22, r20
+ 178:	62 2b       	or	r22, r18
+ 17a:	6b bb       	out	0x1b, r22	; 27
+ 17c:	08 95       	ret
+				return 1; // no errors
+			}
+		return -2; // pin_number or value are out of range
+
+		case GPIOB:
+			if (pin_number < 7) 
+ 17e:	67 30       	cpi	r22, 0x07	; 7
+ 180:	98 f5       	brcc	.+102    	; 0x1e8 <DIO_setPinValue+0xbc>
+			{
+				PORTB_DATA |= (value<< pin_number);
+ 182:	88 b3       	in	r24, 0x18	; 24
+ 184:	50 e0       	ldi	r21, 0x00	; 0
+ 186:	9a 01       	movw	r18, r20
+ 188:	02 c0       	rjmp	.+4      	; 0x18e <DIO_setPinValue+0x62>
+ 18a:	22 0f       	add	r18, r18
+ 18c:	33 1f       	adc	r19, r19
+ 18e:	6a 95       	dec	r22
+ 190:	e2 f7       	brpl	.-8      	; 0x18a <DIO_setPinValue+0x5e>
+ 192:	b9 01       	movw	r22, r18
+ 194:	68 2b       	or	r22, r24
+ 196:	68 bb       	out	0x18, r22	; 24
+				return 1; // no errors
+ 198:	81 e0       	ldi	r24, 0x01	; 1
+ 19a:	08 95       	ret
+			}
+		return -2; // pin_number or value are out of range
+		
+		case GPIOC:
+			if (pin_number < 7 && value <= 1) 
+ 19c:	67 30       	cpi	r22, 0x07	; 7
+ 19e:	30 f5       	brcc	.+76     	; 0x1ec <DIO_setPinValue+0xc0>
+ 1a0:	42 30       	cpi	r20, 0x02	; 2
+ 1a2:	30 f5       	brcc	.+76     	; 0x1f0 <DIO_setPinValue+0xc4>
+				{
+					PORTC_DATA |= (value<< pin_number);
+ 1a4:	85 b3       	in	r24, 0x15	; 21
+ 1a6:	50 e0       	ldi	r21, 0x00	; 0
+ 1a8:	9a 01       	movw	r18, r20
+ 1aa:	02 c0       	rjmp	.+4      	; 0x1b0 <DIO_setPinValue+0x84>
+ 1ac:	22 0f       	add	r18, r18
+ 1ae:	33 1f       	adc	r19, r19
+ 1b0:	6a 95       	dec	r22
+ 1b2:	e2 f7       	brpl	.-8      	; 0x1ac <DIO_setPinValue+0x80>
+ 1b4:	b9 01       	movw	r22, r18
+ 1b6:	68 2b       	or	r22, r24
+ 1b8:	65 bb       	out	0x15, r22	; 21
+					return 1; // no errors
+ 1ba:	81 e0       	ldi	r24, 0x01	; 1
+ 1bc:	08 95       	ret
+				}
+		return -2; // pin_number or value are out of range
+		
+		case GPIOD:
+		if (pin_number < 7 && value <= 1) 
+ 1be:	67 30       	cpi	r22, 0x07	; 7
+ 1c0:	c8 f4       	brcc	.+50     	; 0x1f4 <DIO_setPinValue+0xc8>
+ 1c2:	42 30       	cpi	r20, 0x02	; 2
+ 1c4:	c8 f4       	brcc	.+50     	; 0x1f8 <DIO_setPinValue+0xcc>
+				{
+					PORTD_DATA |= (value<< pin_number);
+ 1c6:	82 b3       	in	r24, 0x12	; 18
+ 1c8:	50 e0       	ldi	r21, 0x00	; 0
+ 1ca:	9a 01       	movw	r18, r20
+ 1cc:	02 c0       	rjmp	.+4      	; 0x1d2 <DIO_setPinValue+0xa6>
+ 1ce:	22 0f       	add	r18, r18
+ 1d0:	33 1f       	adc	r19, r19
+ 1d2:	6a 95       	dec	r22
+ 1d4:	e2 f7       	brpl	.-8      	; 0x1ce <DIO_setPinValue+0xa2>
+ 1d6:	b9 01       	movw	r22, r18
+ 1d8:	68 2b       	or	r22, r24
+ 1da:	62 bb       	out	0x12, r22	; 18
+					return 1; // no errors
+ 1dc:	81 e0       	ldi	r24, 0x01	; 1
+ 1de:	08 95       	ret
+				}
+			
+		return -2; // pin_number or value are out of range
+
+	default: return -1; // GPIO Id isn't defined
+ 1e0:	8f ef       	ldi	r24, 0xFF	; 255
+ 1e2:	08 95       	ret
+				{
+					SET_BIT(PORTA_DATA, pin_number);
+				}
+				return 1; // no errors
+			}
+		return -2; // pin_number or value are out of range
+ 1e4:	8e ef       	ldi	r24, 0xFE	; 254
+ 1e6:	08 95       	ret
+			if (pin_number < 7) 
+			{
+				PORTB_DATA |= (value<< pin_number);
+				return 1; // no errors
+			}
+		return -2; // pin_number or value are out of range
+ 1e8:	8e ef       	ldi	r24, 0xFE	; 254
+ 1ea:	08 95       	ret
+			if (pin_number < 7 && value <= 1) 
+				{
+					PORTC_DATA |= (value<< pin_number);
+					return 1; // no errors
+				}
+		return -2; // pin_number or value are out of range
+ 1ec:	8e ef       	ldi	r24, 0xFE	; 254
+ 1ee:	08 95       	ret
+ 1f0:	8e ef       	ldi	r24, 0xFE	; 254
+ 1f2:	08 95       	ret
+				{
+					PORTD_DATA |= (value<< pin_number);
+					return 1; // no errors
+				}
+			
+		return -2; // pin_number or value are out of range
+ 1f4:	8e ef       	ldi	r24, 0xFE	; 254
+ 1f6:	08 95       	ret
+ 1f8:	8e ef       	ldi	r24, 0xFE	; 254
+
+	default: return -1; // GPIO Id isn't defined
+	}
+}
+ 1fa:	08 95       	ret
+
+000001fc <DIO_readPinValue>:
+
+
+
+uint8_t DIO_readPinValue(uint8_t GPIO, uint8_t pin_number)
+{
+	switch (GPIO)
+ 1fc:	81 30       	cpi	r24, 0x01	; 1
+ 1fe:	91 f0       	breq	.+36     	; 0x224 <DIO_readPinValue+0x28>
+ 200:	28 f0       	brcs	.+10     	; 0x20c <DIO_readPinValue+0x10>
+ 202:	82 30       	cpi	r24, 0x02	; 2
+ 204:	d9 f0       	breq	.+54     	; 0x23c <DIO_readPinValue+0x40>
+ 206:	83 30       	cpi	r24, 0x03	; 3
+ 208:	29 f1       	breq	.+74     	; 0x254 <DIO_readPinValue+0x58>
+ 20a:	30 c0       	rjmp	.+96     	; 0x26c <DIO_readPinValue+0x70>
+	{
+		case GPIOA:
+			if (pin_number < 8) 
+ 20c:	68 30       	cpi	r22, 0x08	; 8
+ 20e:	80 f5       	brcc	.+96     	; 0x270 <DIO_readPinValue+0x74>
+			{
+				// return the value
+				return GET_BIT(PORTA_PIN, pin_number); // no errors
+ 210:	29 b3       	in	r18, 0x19	; 25
+ 212:	30 e0       	ldi	r19, 0x00	; 0
+ 214:	c9 01       	movw	r24, r18
+ 216:	02 c0       	rjmp	.+4      	; 0x21c <DIO_readPinValue+0x20>
+ 218:	95 95       	asr	r25
+ 21a:	87 95       	ror	r24
+ 21c:	6a 95       	dec	r22
+ 21e:	e2 f7       	brpl	.-8      	; 0x218 <DIO_readPinValue+0x1c>
+ 220:	81 70       	andi	r24, 0x01	; 1
+ 222:	08 95       	ret
+			}
+		return -2; // pin_number is out of range
+
+		case GPIOB:
+			if (pin_number < 8) 
+ 224:	68 30       	cpi	r22, 0x08	; 8
+ 226:	30 f5       	brcc	.+76     	; 0x274 <DIO_readPinValue+0x78>
+			{
+				return GET_BIT(PORTB_PIN, pin_number); // no errors
+ 228:	26 b3       	in	r18, 0x16	; 22
+ 22a:	30 e0       	ldi	r19, 0x00	; 0
+ 22c:	c9 01       	movw	r24, r18
+ 22e:	02 c0       	rjmp	.+4      	; 0x234 <DIO_readPinValue+0x38>
+ 230:	95 95       	asr	r25
+ 232:	87 95       	ror	r24
+ 234:	6a 95       	dec	r22
+ 236:	e2 f7       	brpl	.-8      	; 0x230 <DIO_readPinValue+0x34>
+ 238:	81 70       	andi	r24, 0x01	; 1
+ 23a:	08 95       	ret
+			}
+		return -2; // pin_number is out of range
+		
+		case GPIOC:
+			if (pin_number < 8) 
+ 23c:	68 30       	cpi	r22, 0x08	; 8
+ 23e:	e0 f4       	brcc	.+56     	; 0x278 <DIO_readPinValue+0x7c>
+				{
+					return GET_BIT(PORTC_PIN, pin_number); // no errors
+ 240:	23 b3       	in	r18, 0x13	; 19
+ 242:	30 e0       	ldi	r19, 0x00	; 0
+ 244:	c9 01       	movw	r24, r18
+ 246:	02 c0       	rjmp	.+4      	; 0x24c <DIO_readPinValue+0x50>
+ 248:	95 95       	asr	r25
+ 24a:	87 95       	ror	r24
+ 24c:	6a 95       	dec	r22
+ 24e:	e2 f7       	brpl	.-8      	; 0x248 <DIO_readPinValue+0x4c>
+ 250:	81 70       	andi	r24, 0x01	; 1
+ 252:	08 95       	ret
+				}
+		return -2; // pin_number is out of range
+		
+		case GPIOD:
+		if (pin_number < 8) 
+ 254:	68 30       	cpi	r22, 0x08	; 8
+ 256:	90 f4       	brcc	.+36     	; 0x27c <DIO_readPinValue+0x80>
+				{
+					return GET_BIT(PORTD_PIN, pin_number); // no errors
+ 258:	20 b3       	in	r18, 0x10	; 16
+ 25a:	30 e0       	ldi	r19, 0x00	; 0
+ 25c:	c9 01       	movw	r24, r18
+ 25e:	02 c0       	rjmp	.+4      	; 0x264 <DIO_readPinValue+0x68>
+ 260:	95 95       	asr	r25
+ 262:	87 95       	ror	r24
+ 264:	6a 95       	dec	r22
+ 266:	e2 f7       	brpl	.-8      	; 0x260 <DIO_readPinValue+0x64>
+ 268:	81 70       	andi	r24, 0x01	; 1
+ 26a:	08 95       	ret
+				}
+		return -2; // pin_number is out of range
+
+	default: return -1; // GPIO Id isn't defined
+ 26c:	8f ef       	ldi	r24, 0xFF	; 255
+ 26e:	08 95       	ret
+			if (pin_number < 8) 
+			{
+				// return the value
+				return GET_BIT(PORTA_PIN, pin_number); // no errors
+			}
+		return -2; // pin_number is out of range
+ 270:	8e ef       	ldi	r24, 0xFE	; 254
+ 272:	08 95       	ret
+		case GPIOB:
+			if (pin_number < 8) 
+			{
+				return GET_BIT(PORTB_PIN, pin_number); // no errors
+			}
+		return -2; // pin_number is out of range
+ 274:	8e ef       	ldi	r24, 0xFE	; 254
+ 276:	08 95       	ret
+		case GPIOC:
+			if (pin_number < 8) 
+				{
+					return GET_BIT(PORTC_PIN, pin_number); // no errors
+				}
+		return -2; // pin_number is out of range
+ 278:	8e ef       	ldi	r24, 0xFE	; 254
+ 27a:	08 95       	ret
+		case GPIOD:
+		if (pin_number < 8) 
+				{
+					return GET_BIT(PORTD_PIN, pin_number); // no errors
+				}
+		return -2; // pin_number is out of range
+ 27c:	8e ef       	ldi	r24, 0xFE	; 254
+
+	default: return -1; // GPIO Id isn't defined
+	}
+ 27e:	08 95       	ret
+
+00000280 <main>:
+#include "DIO_private.h"
+
+int main(void)
+{
+	// button definition
+	DIO_setPinDirection(GPIOA, PIN0, INPUT); // for button
+ 280:	40 e0       	ldi	r20, 0x00	; 0
+ 282:	60 e0       	ldi	r22, 0x00	; 0
+ 284:	80 e0       	ldi	r24, 0x00	; 0
+ 286:	0e 94 36 00 	call	0x6c	; 0x6c <DIO_setPinDirection>
+	DIO_setPinValue(GPIOA, PIN0, HIGH); // set pull-up resistor on this pin
+ 28a:	41 e0       	ldi	r20, 0x01	; 1
+ 28c:	60 e0       	ldi	r22, 0x00	; 0
+ 28e:	80 e0       	ldi	r24, 0x00	; 0
+ 290:	0e 94 96 00 	call	0x12c	; 0x12c <DIO_setPinValue>
+	// led definition
+	DIO_setPinDirection(GPIOA, PIN1, OUTPUT);
+ 294:	41 e0       	ldi	r20, 0x01	; 1
+ 296:	61 e0       	ldi	r22, 0x01	; 1
+ 298:	80 e0       	ldi	r24, 0x00	; 0
+ 29a:	0e 94 36 00 	call	0x6c	; 0x6c <DIO_setPinDirection>
+	DIO_setPinValue(GPIOA, PIN1, LOW);
+ 29e:	40 e0       	ldi	r20, 0x00	; 0
+ 2a0:	61 e0       	ldi	r22, 0x01	; 1
+ 2a2:	80 e0       	ldi	r24, 0x00	; 0
+ 2a4:	0e 94 96 00 	call	0x12c	; 0x12c <DIO_setPinValue>
+	
+	uint8_t button_state = 1;
+	uint8_t previous_state = 1;
+ 2a8:	d1 e0       	ldi	r29, 0x01	; 1
+ 2aa:	01 c0       	rjmp	.+2      	; 0x2ae <main+0x2e>
+ 2ac:	dc 2f       	mov	r29, r28
+	uint8_t led_state = 0;
+    while(1)
+    {
+		// read button state
+		button_state = DIO_readPinValue(GPIOA, PIN0); 
+ 2ae:	60 e0       	ldi	r22, 0x00	; 0
+ 2b0:	80 e0       	ldi	r24, 0x00	; 0
+ 2b2:	0e 94 fe 00 	call	0x1fc	; 0x1fc <DIO_readPinValue>
+ 2b6:	c8 2f       	mov	r28, r24
+		// falling edge?
+        if (!button_state && previous_state)
+ 2b8:	81 11       	cpse	r24, r1
+ 2ba:	f8 cf       	rjmp	.-16     	; 0x2ac <main+0x2c>
+ 2bc:	dd 23       	and	r29, r29
+ 2be:	b9 f3       	breq	.-18     	; 0x2ae <main+0x2e>
+        {
+			led_state = DIO_readPinValue(GPIOA,PIN1);
+ 2c0:	61 e0       	ldi	r22, 0x01	; 1
+ 2c2:	80 e0       	ldi	r24, 0x00	; 0
+ 2c4:	0e 94 fe 00 	call	0x1fc	; 0x1fc <DIO_readPinValue>
+			// toggle the led
+			DIO_setPinValue(GPIOA, PIN1, !led_state);
+ 2c8:	41 e0       	ldi	r20, 0x01	; 1
+ 2ca:	81 11       	cpse	r24, r1
+ 2cc:	40 e0       	ldi	r20, 0x00	; 0
+ 2ce:	61 e0       	ldi	r22, 0x01	; 1
+ 2d0:	80 e0       	ldi	r24, 0x00	; 0
+ 2d2:	0e 94 96 00 	call	0x12c	; 0x12c <DIO_setPinValue>
+			previous_state = button_state;
+ 2d6:	dc 2f       	mov	r29, r28
+ 2d8:	ea cf       	rjmp	.-44     	; 0x2ae <main+0x2e>
+
+000002da <_exit>:
+ 2da:	f8 94       	cli
+
+000002dc <__stop_program>:
+ 2dc:	ff cf       	rjmp	.-2      	; 0x2dc <__stop_program>
