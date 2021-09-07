@@ -4,7 +4,7 @@
 /* DIO headers */
 #include "DIO_interface.h"
 #include "DIO_private.h"
-#include "DIO_config.h"
+// #include "DIO_config.h"
 
 sint8_t DIO_setPinDirection(uint8_t GPIO, uint8_t pin_number, uint8_t direction)
 {
