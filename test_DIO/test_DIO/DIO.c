@@ -4,46 +4,62 @@
 /* DIO headers */
 #include "DIO_interface.h"
 #include "DIO_private.h"
-// #include "DIO_config.h"
+#include "DIO_config.h"
 
 sint8_t DIO_setPinDirection(uint8_t GPIO, uint8_t pin_number, uint8_t direction)
 {
 	switch (GPIO)
 	{
 		case GPIOA:
-			if (pin_number < 7 && direction <= 1) 
+			if (pin_number < 7) 
 			{
-				PORTA_DDR |= (direction<< pin_number);
-				return 1; // no errors
+				if (direction <= 1)
+				{
+					PORTA_DDR |= (direction<< pin_number);
+					return NO_ERRORS; // no errors
+				}
+				return INVALID_PIN_DIRECTION;
 			}
-		return -2; // pin_number or direction are out of range
-
+		return PIN_NUMBER_OUT_OF_RANGE; 
+		
 		case GPIOB:
-			if (pin_number < 7 && direction <= 1) 
+			if (pin_number < 7)
 			{
-				PORTB_DDR |= (direction<< pin_number);
-				return 1; // no errors
+				if (direction <= 1)
+				{
+					PORTB_DDR |= (direction<< pin_number);
+					return NO_ERRORS; // no errors
+				}
+				return INVALID_PIN_DIRECTION;
 			}
-		return -2; // pin_number or direction are out of range
+			return PIN_NUMBER_OUT_OF_RANGE; // Error
 		
 		case GPIOC:
-			if (pin_number < 7 && direction <= 1) 
+			if (pin_number < 7)
+			{
+				if (direction <= 1)
 				{
-					PORTA_DDR |= (direction<< pin_number);
-					return 1; // no errors
+					PORTC_DDR |= (direction<< pin_number);
+					return NO_ERRORS; // no errors
 				}
-		return -2; // pin_number or direction are out of range
+				return INVALID_PIN_DIRECTION;
+			}
+			return PIN_NUMBER_OUT_OF_RANGE; // Error
 		
 		case GPIOD:
-		if (pin_number < 7 && direction <= 1) 
-				{
-					PORTA_DDR |= (direction<< pin_number);
-					return 1; // no errors
-				}
+		if (pin_number < 7)
+		{
+			if (direction <= 1)
+			{
+				PORTD_DDR |= (direction<< pin_number);
+				return NO_ERRORS; // no errors
+			}
+			return INVALID_PIN_DIRECTION;
+		}
+		return PIN_NUMBER_OUT_OF_RANGE; // pin_number or direction are out of range
 			
-		return -2; // pin_number or direction are out of range
 
-	default: return -1; // GPIO Id isn't defined
+	default: return INVALID_PORT_ID; // GPIO Id isn't defined
 	}
 }
 
@@ -64,9 +80,9 @@ sint8_t DIO_setPinValue(uint8_t GPIO, uint8_t pin_number, uint8_t value)
 			{
 				SET_BIT(PORTA_DATA, pin_number);
 			}
-			return 1; // no errors
+			return NO_ERRORS; // no errors
 		}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 
 
 		case GPIOB:
@@ -80,9 +96,9 @@ sint8_t DIO_setPinValue(uint8_t GPIO, uint8_t pin_number, uint8_t value)
 			{
 				SET_BIT(PORTB_DATA, pin_number);
 			}
-			return 1; // no errors
+			return NO_ERRORS; // no errors
 		}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 
 		
 		case GPIOC:
@@ -96,9 +112,9 @@ sint8_t DIO_setPinValue(uint8_t GPIO, uint8_t pin_number, uint8_t value)
 			{
 				SET_BIT(PORTC_DATA, pin_number);
 			}
-			return 1; // no errors
+			return NO_ERRORS; 
 		}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 
 		
 		case GPIOD:
@@ -112,12 +128,12 @@ sint8_t DIO_setPinValue(uint8_t GPIO, uint8_t pin_number, uint8_t value)
 			{
 				SET_BIT(PORTD_DATA, pin_number);
 			}
-			return 1; // no errors
+			return NO_ERRORS; // no errors
 		}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 
 
-		default: return -1; // GPIO Id isn't defined
+		default: return INVALID_PORT_ID; // GPIO Id isn't defined
 	}
 }
 
@@ -133,29 +149,29 @@ uint8_t DIO_readPinValue(uint8_t GPIO, uint8_t pin_number)
 				// return the value
 				return GET_BIT(PORTA_PIN, pin_number); // no errors
 			}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 
 		case GPIOB:
 			if (pin_number < 8) 
 			{
 				return GET_BIT(PORTB_PIN, pin_number); // no errors
 			}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 		
 		case GPIOC:
 			if (pin_number < 8) 
 				{
 					return GET_BIT(PORTC_PIN, pin_number); // no errors
 				}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 		
 		case GPIOD:
 		if (pin_number < 8) 
 				{
 					return GET_BIT(PORTD_PIN, pin_number); // no errors
 				}
-		return -2; // pin_number is out of range
+		return PIN_NUMBER_OUT_OF_RANGE; // Error
 
-	default: return -1; // GPIO Id isn't defined
+	default: return INVALID_PORT_ID; // GPIO Id isn't defined
 	}
 }
